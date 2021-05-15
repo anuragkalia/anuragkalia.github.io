@@ -18,18 +18,13 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title:  Scribblings from the Past
-tagline: 'Can be bible for the future'
+title: Notes for Life
 description: 'Over time, I keep forgetting things I know. This is me teaching myself.'
 url: 'https://anuragkalia.github.io/'
 baseurl: ''
 github_username:  anuragkalia
 
-author:
-  name: Anurag Kalia
-  url:  https://github.com/anuragkalia
-  email: anurag.kalia@outlook.com
-
+author: Anurag Kalia
 permalink: /:year/:month/:day/:title
 
 plugins:
@@ -55,4 +50,4 @@ plugins:
 #   - vendor/gems/
 #   - vendor/ruby/
 
-theme: jekyll-theme-midnight
+theme: minima
