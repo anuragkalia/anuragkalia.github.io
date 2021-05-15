@@ -30,9 +30,7 @@ author:
   url:  https://github.com/anuragkalia
   email: anurag.kalia@outlook.com
 
-# Build settings
-# theme: "ed."
-remote_theme: minicomp/ed
+permalink: /:year/:month/:day/:title
 
 plugins:
   - jekyll-feed
