@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "CSS BOx Model: Notes from Specifications"
+title: "CSS Box Model: Notes from Specifications"
 date: 2022-05-10 12:00:00 +0530
 ---
 
@@ -8,23 +8,37 @@ date: 2022-05-10 12:00:00 +0530
 
 ## Normal Flow (flow positioning)
 
-display: none | inline | block | list-item | inline-block | table | inline-table | table-\*
+Valid values for `display`:
 
-block container box: block, list-item, inline-block
-block level box: block, list-item, table
+1. Block container box: Can contain blocks
+   1. `block`, `list-item`: Also block level.
+   2. `inline-block`: Treated as `inline` by parents.
+2. Block Level Boxes: Treated as blocks by parent
+   1. `block`, `list-item`: Also block containers.
+   2. `table`: Not a block container. Starts a table formatting context instead.
+3. Misc:
+   1. `none`: Remove everything
+   2. `contents`: Remove parent, keep children.
+   3. `inline`: Contains only line boxes
+   4. `inline-table`: Treated as within line box, start a table formatting context
+   5. `table-*`: Relevanr only as children of a table.
 
 ### Anonymous block boxes
 
-Siblings can be all inline leve or block level boxes. Text node is counted as inline box.
+Rule: Siblings can be only all inline leve or block level boxes.
 
-Mixed inline and block siblings are handled by adding anonymous block boxes to the inline siblings. Its properties are computed from the parent in the box tree, not the element tree.
+Implications:
+
+1. Text node is counted as inline box.
+2. Mixed inline and block siblings are handled by adding anonymous block boxes to the inline siblings. Its properties are computed from the parent in the [box tree](#generate-box-tree-from-element-tree), not the element tree.
 
 ## Generate Box Tree from Element Tree
 
 1. Add principal boxes and other boxes based on the value of `display`.
-   1. `none`: delete everything.
+
+   1. `none`: delete the element and its subtree.
    2. `contents`: visually behave as if the box is replaced by its children boxes in the box tree.
-   3.
+
 2. Add anonymous block and inline boxes to make sure siblings are all inline or all block.
 3. Give values to padding, border and margin.
 
@@ -36,15 +50,19 @@ Mixed inline and block siblings are handled by adding anonymous block boxes to t
    3. flex formatting context
    4. grid formatting context
 2. Blockification and inlinefication.
+   1. Forcible changing of the outer display type of a box.
+   2. Example:
+      1. `flex`, `grid` -> blockify immediate children
+      2. Absolute positioning / float -> blockify the element itself
 
 # Relevant Properties
 
 1. `padding`:
-   1. zero or positive.
-   2. Percentage of top/bottom/left/right resolved wrt logical width of containing block.
+   1. Only zero or positive.
+   2. Percentage of top/bottom/left/right resolved wrt logical width of containing block. **NOTE: even top/bottom percentages resolved wrt logical width only**.
 2. `border`: Same as `padding`
 3. `margin`: Same as `padding` +
-   1. Negative is possible.
+   1. Negative value is possible.
    2. `auto` is possible.
 
 ## Position the Box Tree
@@ -52,12 +70,12 @@ Mixed inline and block siblings are handled by adding anonymous block boxes to t
 For the vast majority of the elements, `display` property is the primary property to generate the box tree from the element tree. Box tree is the hierarchy of visual boxes generated from the element tree.
 
 1. `display: none`: The element and its children are removed from the box tree.
-2. `display: contents`: The element itself is removed from the box tree and replaced by its children under its parent. This does not affect semantics and inheritance.
+2. `display: contents`: The element itself is removed from the box tree and replaced by its children under its parent. This does not affect semantics and property inheritance.
 3. display outside: Participates in the block formatting context as a block or inline box. Force converted to block in flex and grid formatting contexts.
 4. display inside:
    1. `flow`: Establishes normal flow.
       1. Conditionally establishes a new block formatting context if other proerties force it (e.g. `float`, `position`, `overflow` etc.).
-      2. Optional `list-item`: Also generates an optional marker box addressed by `::marker`.
+      2. Optional `list-item`: Also generates an optional marker box addressable by `::marker`.
    2. `flow-root`: Just like `flow` + ALWAYS generates a new block formatting context by itself.
    3. `table`: Establishes table formatting context. Ignored for this doc.
    4. `flex`: Establishes flex formatting context. Ignored for this doc.
